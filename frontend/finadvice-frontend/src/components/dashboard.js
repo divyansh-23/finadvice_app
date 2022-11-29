@@ -12,9 +12,10 @@ export default function Dashboard (){
 
     useEffect(() => {
         
-        axios.get(API_URL+`posts`)
+        axios.get("http://localhost:3000/")
         .then(
             res => {
+                console.log(res.data);
                 setCourses(res.data);
             }
         )
