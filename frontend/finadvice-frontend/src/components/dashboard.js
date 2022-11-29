@@ -12,7 +12,7 @@ export default function Dashboard (){
 
     useEffect(() => {
         
-        axios.get("http://localhost:3000/")
+        axios.get(API_URL+`posts`)
         .then(
             res => {
                 console.log(res.data);

@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
 import { API_URL } from "../api_config";
 import { useAuth } from "./auth";
@@ -102,6 +103,14 @@ export default function Login () {
                                 >
                                 Sign in
                                 </button>
+                                <div className="text-grey-dark mt-6">
+                                    New to FinAdvice? &nbsp;  
+                                  <a className="no-underline border-b border-blue text-blue">
+                                    <Link to = "/signup">
+                                    Sign Up
+                                    </Link>
+                                  </a>
+                                 </div>
                                 { credentialError && <h1 className="text-rose-700"> Invalid Credentials</h1>}
                             </form>
                     </div>
