@@ -2,8 +2,8 @@ Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   resources :sessions, only: [:create]
   resources :registrations, only: [:create, :index, :update]
-  get "/instructor_courses,", to: "courses#:instructor_courses"
-  resources :courses, only: [:create]
+  get "/instructor_courses", to: "courses#instructor_courses"
+  resources :courses, only: [:create, :index]
   resources :enrollments, only: [:create, :delete]
   get "/student_courses", to: "enrollments#student_courses"
   delete :logout, to: "sessions#logout"

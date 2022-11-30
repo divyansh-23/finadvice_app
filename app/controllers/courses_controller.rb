@@ -66,11 +66,16 @@ class CoursesController < ApplicationController
   def index
     courses = Course.all
     render json: {
+      status: :complete,
       courses: courses
     }
   end
 
   def instructor_courses
-    
+    courses = Course.where(user_id: params["id"])
+    render json: {
+      status: :complete,
+      courses: courses
+    }
   end
 end
