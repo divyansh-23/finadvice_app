@@ -47,7 +47,7 @@ export default function Login () {
           });
         var config = {
             method: 'post',
-            url: "http://localhost:3000/sessions",
+            url: LOGIN_API_URL,
             headers: { 
               'Content-Type': 'application/json', 
             },
