@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
-import { API_URL } from "../api_config";
+import { LOGIN_API_URL } from "../api_config";
 import { useAuth } from "./auth";
 import axios from 'axios';
 
@@ -39,19 +39,37 @@ export default function Login () {
     const handleSubmit = event => {
         event.preventDefault();
         validate();
-        axios.post(API_URL+`posts`, {
-            username: email,
-            pwd: password
-        })
+        var data = JSON.stringify({
+            "user": {
+              "email": email,
+              "password": password
+            }
+          });
+        var config = {
+            method: 'post',
+            url: "http://localhost:3000/sessions",
+            headers: { 
+              'Content-Type': 'application/json', 
+            },
+            data : data
+        };
+        axios(config)
         .then(
             res => {
                 const data = res.data;
-                console.log(res.data);
+                console.log("status code",res.status);
+                if (data["logged_in"] !== undefined && data["logged_in"] === true) {
+                    auth.login(email);
+                    navigate(redirectPath,{replace: true})
+                }
+                else {
+                    setCredentialError(true)
+                }
+                console.log(typeof(data));
+                
             }
         )
         .catch( err => console.log(err))
-        auth.login(email);
-        navigate(redirectPath,{replace: true})
 
     }
     return(
