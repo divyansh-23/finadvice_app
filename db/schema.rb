@@ -10,9 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_30_035346) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_30_200551) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "course_modules", force: :cascade do |t|
+    t.string "name"
+    t.integer "position"
+    t.text "description"
+    t.bigint "course_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "media_url"
+    t.index ["course_id"], name: "index_course_modules_on_course_id"
+  end
 
   create_table "courses", force: :cascade do |t|
     t.string "name"
@@ -27,6 +38,17 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_30_035346) do
     t.index ["user_id"], name: "index_courses_on_user_id"
   end
 
+  create_table "enrollments", force: :cascade do |t|
+    t.string "enrolled_at"
+    t.integer "student_progress_module_id"
+    t.bigint "course_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_enrollments_on_course_id"
+    t.index ["user_id"], name: "index_enrollments_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email"
     t.string "password_digest"
@@ -38,5 +60,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_30_035346) do
     t.string "name"
   end
 
+  add_foreign_key "course_modules", "courses"
   add_foreign_key "courses", "users"
+  add_foreign_key "enrollments", "courses"
+  add_foreign_key "enrollments", "users"
 end

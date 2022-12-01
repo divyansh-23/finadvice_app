@@ -31,7 +31,7 @@ export default function NavBar() {
                     </a>
                 </div>
                 { auth.user &&
-                        <h1 className="block mt-4 lg:inline-block lg:mt-0 text-white mr-4">Welcome,{auth.user}!</h1>
+                        <h1 className="block mt-4 lg:inline-block lg:mt-0 text-white mr-4">Welcome,{auth.user['user']['email']}!</h1>
                 }   
                 <div>
                     { auth.user &&
