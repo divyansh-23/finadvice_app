@@ -1,5 +1,5 @@
 import React from "react";
-import {useState, useEffect} from "react";
+import {useState} from "react";
 import { Link } from "react-router-dom";
 import { SIGN_UP_URL } from "../api_config";
 import axios from "axios";
@@ -69,6 +69,7 @@ export default function SignUp () {
             if (res.hasOwnProperty("user")) {
                 console.log("here");
                 setSuccessMsg(true);
+                setCredentialError(false);
                 setFullName('');
                 setPassword('');
                 setConfirmPassword('');
@@ -80,7 +81,8 @@ export default function SignUp () {
             }
           })
           .catch(function (error) {
-            setCredentialError(true)
+            setCredentialError(true);
+            setSuccessMsg(false);
         });
     };
  return (   

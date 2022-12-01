@@ -10,13 +10,11 @@ import {
   Route,
   Navigate
 } from "react-router-dom";
-import {
-  Redirect
-} from "react-router";
 import Dashboard from './components/dashboard';
 import CourseModule from './components/modules';
+
+
 function App() {
-  const auth = useAuth();
   return (
   <div className="App">
     <AuthProvider>
