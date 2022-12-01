@@ -1,6 +1,10 @@
 import React from "react";
 import {useState, useEffect} from "react";
 import { Link } from "react-router-dom";
+import { SIGN_UP_URL } from "../api_config";
+import axios from "axios";
+
+
 export default function SignUp () {
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
@@ -10,50 +14,74 @@ export default function SignUp () {
     const [role,setRole] = useState('');
     const [number, setNumber] = useState('');
     const [credentialError, setCredentialError] = useState(false);
+    const [successMsg, setSuccessMsg] = useState(false);
 
     const current = new Date().toISOString().split("T")[0]
     const handleNameChange = e => {
-      if (e.target.value !==''){
-        setCredentialError(false)
-         }
-      setFullName(e.target.value)
+        setFullName(e.target.value)
      };
     const handleEmailChange = e => {
-     if (e.target.value !==''){
-            setCredentialError(false)
-          }
-     setEmail(e.target.value)
+        setEmail(e.target.value)
     };
     const handlePasswordChange = e => {
-     if (e.target.value !==''){
-            setCredentialError(false)
-          }
         setPassword(e.target.value)
     };
     const handleConfirmPasswordChange = e => {
-        if (e.target.value !==''){
-            setCredentialError(false)
-          }
         setConfirmPassword(e.target.value)
     };
     const handleDobChange = e => {
-        if (e.target.value !==''){
-            setCredentialError(false)
-          }
         setDob(e.target.value)
     };
     const handleRoleChange = e => {
-        console.log(e)
+        console.log(e.target.value);
         setRole(e.target.value)
     };
     const handleNumberChange = e => {
-        if (e.target.value !==''){
-            setCredentialError(false)
-          }
         setNumber(e.target.value)
     };
     const handleSignupSubmit = e => {
-        console.log("Works")
+        var data = JSON.stringify({
+            "user": {
+              "email": email,
+              "password": password,
+              "password_confirmation": confirm_password,
+              "name": fullName,
+              "phone": number,
+              "role": role,
+              "dob": dob
+            }
+          });
+          
+          var config = {
+            method: 'post',
+            url: SIGN_UP_URL,
+            headers: { 
+              'Content-Type': 'application/json', 
+            },
+            data : data
+          };
+          
+          axios(config)
+          .then(function (response) {
+            const res = response.data;
+            console.log(res);
+            console.log(res.hasOwnProperty("user"));
+            if (res.hasOwnProperty("user")) {
+                console.log("here");
+                setSuccessMsg(true);
+                setFullName('');
+                setPassword('');
+                setConfirmPassword('');
+                setDob('');
+                setRole('');
+                setNumber('');
+            } else {
+                setCredentialError(true)
+            }
+          })
+          .catch(function (error) {
+            setCredentialError(true)
+        });
     };
  return (   
     <section className="h-screen">
@@ -88,13 +116,6 @@ export default function SignUp () {
                         placeholder="Confirm Password" 
                         onChange={handleConfirmPasswordChange}
                         />
-                    {/* <input 
-                        type="text"
-                        className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none mb-6"
-                        name="user_location"
-                        placeholder="City" 
-                        onChange={handleCityChange}
-                    /> */}
                     <input 
                         type="text"
                          className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none mb-6"
@@ -113,7 +134,7 @@ export default function SignUp () {
                         />
                     </label>             
                     <select name="user_role"  value={role}  onChange={handleRoleChange} className= "form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-500 focus:bg-white focus:border-blue-600 focus:outline-none mb-6">
-                        <option >Select role</option>
+                        <option value="">Select role</option>
                         <option value="instructor">Instructor</option>
                         <option value="student" >Student</option>
                     </select>
@@ -123,6 +144,17 @@ export default function SignUp () {
                         onClick={handleSignupSubmit}
                         className="inline-block px-7 py-3 bg-blue-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out w-full"
                     >Create Account</button>
+                    {successMsg && 
+                        <div className="mt-4 text-green-700" >
+                            <span className="font-medium">User successfully created!</span>
+                        </div>
+                    }
+                    {credentialError &&
+                        
+                        <div className="mt-4">
+                            <span className="font-medium text-red-700">Sign Up Failed! Please try again!</span>
+                        </div>
+                    }
                 </div>
 
                 <div className="text-grey-dark mt-6">
@@ -130,7 +162,7 @@ export default function SignUp () {
                     <a className="no-underline border-b border-blue text-blue">
                     <Link to = "/login">
                         Log in
-                        </Link>
+                    </Link>
                     </a>
                 </div>
             </div>

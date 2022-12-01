@@ -59,7 +59,7 @@ export default function Login () {
                 const data = res.data;
                 console.log("status code",res.status);
                 if (data["logged_in"] !== undefined && data["logged_in"] === true) {
-                    auth.login(email);
+                    auth.login(data);
                     navigate(redirectPath,{replace: true})
                 }
                 else {

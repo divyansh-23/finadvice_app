@@ -1,3 +1,5 @@
 export const BASE_URL = "http://localhost:3000/"
 export const LOGIN_API_URL = BASE_URL+ "sessions"
-export const API_URL = "http://localhost:3000/"
+export const ALL_COURSES_URL = BASE_URL+ "courses"
+export const SIGN_UP_URL = BASE_URL + "registrations"
+export const INSTRUCTOR_COURSES = BASE_URL + "instructor_courses"
