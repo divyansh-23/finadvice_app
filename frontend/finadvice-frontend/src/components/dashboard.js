@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, {useState, useEffect} from "react";
 import { useAuth } from "./auth";
-import { ALL_COURSES_URL, INSTRUCTOR_COURSES } from "../api_config";
+import { ALL_COURSES_URL, ENROLLMENT_URL, INSTRUCTOR_COURSES, STUDENT_COURSES } from "../api_config";
 import { Link } from "react-router-dom";
 
 export default function Dashboard (){
@@ -27,7 +27,10 @@ export default function Dashboard (){
 
     const [runEffect, setRunEffect] = useState(false);
     const [instructorCourses, setInstructorCourses] = useState(null);
+    const [studentEnrolledCourses, setStudentEnrolledCourses] = useState(null);
 
+    const userId = auth.user['user']['id'];
+    const userType = auth.userType;
     useEffect(() => {
         
         const fetchCouresData = async () =>{
@@ -41,8 +44,8 @@ export default function Dashboard (){
         }
         fetchCouresData();
         // Instructor courses
-        const fetchInstructorData = async () => {
-            axios.get(INSTRUCTOR_COURSES+`?id=`+auth.user['user']['id'])
+        const fetchInstructorCoursesData = async () => {
+            axios.get(INSTRUCTOR_COURSES+`?id=`+userId)
             .then(
                 res => {
                     setInstructorCourses(res.data);
@@ -50,7 +53,25 @@ export default function Dashboard (){
             )
             .catch(err => console.log(err))
         }
-        fetchInstructorData();
+        
+
+        // Students Enrolled Courses
+        const fetchStudentEnrolledCourses = async () => {
+            axios.get(STUDENT_COURSES+`?user_id=`+userId)
+            .then(
+                res => setStudentEnrolledCourses(res.data)
+            )
+            .catch(err => console.log(err))
+        }
+        fetchStudentEnrolledCourses();
+
+        if (userType === 'instructor'){
+            fetchInstructorCoursesData();
+        } else {
+            fetchStudentEnrolledCourses();
+        }
+        console.log("student enrolled courses",studentEnrolledCourses)
+
     },[runEffect, auth.user]);
 
     const handleAddModalSave = () => {
@@ -93,26 +114,55 @@ export default function Dashboard (){
         // Run the courses API to update changes
         setRunEffect(!runEffect);
     }
+
+    const handleCourseEnroll = (courseId, userId) => {
+        console.log("Course id: ",courseId);
+
+        var data = JSON.stringify({
+            "enrollment": {
+              "course_id": courseId,
+              "user_id": userId
+            }
+          });
+          
+          var config = {
+            method: 'post',
+            url: ENROLLMENT_URL,
+            headers: { 
+              'Content-Type': 'application/json', 
+            },
+            data : data
+          };
+          
+          axios(config)
+          .then(function (response){
+            setRunEffect(!runEffect);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+
+    }
     return(
         
         <div className="container mx-auto mt-8">
-            {auth.userType === 'instructor' && 
+            {userType === 'instructor' && 
                 <div>
                     <div className="grid lg:grid-cols-3 mb-4">
                         <button className = "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4" onClick={() => setShowAddModal(true)}>Add a new course</button>
-                        <button className = "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-4 mb-4">Modify an existing course</button>
                     </div>
                     <hr />
                 </div>
             
             }
-            { instructorCourses && instructorCourses['courses'].length !== 0 &&
+            { userType === 'instructor' && instructorCourses && instructorCourses['courses'].length !== 0 &&
                 <div className="mt-8">
                     <h2 className="text-5xl font-normal leading-normal mt-0 mb-2 text-zinc-800 text-left">
                         My Courses
                     </h2>
                 </div>
             }
+
             <div className="grid lg:grid-cols-3">
                 {instructorCourses && instructorCourses['courses'].map(course => {
                     return(
@@ -132,6 +182,35 @@ export default function Dashboard (){
                     <hr />
                 </div>
             }
+
+            {/* Student Enrolled Courses */}
+            { userType === 'student' && studentEnrolledCourses && studentEnrolledCourses['courses'].length !== 0 &&
+                <div className="mt-8">
+                    <h2 className="text-5xl font-normal leading-normal mt-0 mb-2 text-zinc-800 text-left">
+                        Enrolled Courses
+                    </h2>
+                </div>
+            }
+            <div className="grid lg:grid-cols-3">
+                {studentEnrolledCourses && studentEnrolledCourses['courses'].map(course => {
+                    return(
+                        <div key={course.id} className="container mx-auto mt-8">
+                            <div className="max-w-sm rounded overflow-hidden shadow-lg items-stretch h-full">
+                                <img className="w-full" src="/static/images/card-top.jpeg" alt="Sunset in the mountains" />
+                                <div className="px-6 py-4">
+                                    <div className="font-bold text-xl mb-2"><Link to = "/course_module" state={{ course: course }}>{course.name}</Link></div>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                })}
+            </div>
+            { studentEnrolledCourses && studentEnrolledCourses['courses'].length !== 0 &&
+                <div className="mt-8 mb-8">
+                    <hr />
+                </div>
+            }
+
             { courses && courses['courses'].length !== 0 &&
                 <div className="mt-8">
                     <h2 className="text-5xl font-normal leading-normal mt-0 mb-2 text-zinc-800 text-left">
@@ -148,10 +227,16 @@ export default function Dashboard (){
                                 <div className="px-6 py-4">
                                     <div className="font-bold text-xl mb-2"><Link to = "/course_module" state={{ course: course }}>{course.name}</Link></div>
                                 </div>
-                                { auth.userType === 'student' &&
-                                    <button className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mb-4">
+                                { auth.userType === 'student' && studentEnrolledCourses && studentEnrolledCourses['courses'].map(course => course['id']).indexOf(course.id) === -1 &&
+                                    <button onClick = {() => handleCourseEnroll(course.id, userId)} className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mb-4">
                                         Enroll
                                     </button>
+
+                                }
+                                { auth.userType === 'student' && studentEnrolledCourses && studentEnrolledCourses['courses'].map(course => course['id']).indexOf(course.id) !== -1 &&
+                                    <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-emerald-600 bg-emerald-200 uppercase last:mr-0 mr-1 mb-4">
+                                        Enrolled
+                                    </span>
 
                                 }
                                 

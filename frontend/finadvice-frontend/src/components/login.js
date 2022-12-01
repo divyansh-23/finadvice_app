@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import { LOGIN_API_URL } from "../api_config";
 import { useAuth } from "./auth";
 import axios from 'axios';
@@ -12,10 +12,9 @@ export default function Login () {
     const [password, setPassword] = useState('');
     const [credentialError, setCredentialError] = useState(false);
     const navigate = useNavigate();
-    const location = useLocation();
     const auth = useAuth();
 
-    const redirectPath = location.state?.path || '/dashboard'
+    const redirectPath = '/dashboard'
 
     const handleEmailChange = event => {
         if (event.target.value !== '') {
@@ -103,13 +102,6 @@ export default function Login () {
                                         onChange={handlePasswordChange}
                                         value={password}
                                     />
-                                </div>
-                                <div className="flex justify-between items-center mb-6">
-                                    <a
-                                        href="#!"
-                                        className="text-blue-600 hover:text-blue-700 focus:text-blue-700 active:text-blue-800 duration-200 transition ease-in-out"
-                                        >Forgot password?
-                                    </a>
                                 </div>
 
                                 <button
