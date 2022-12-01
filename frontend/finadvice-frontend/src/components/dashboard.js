@@ -32,7 +32,6 @@ export default function Dashboard (){
     const userId = auth.user['user']['id'];
     const userType = auth.userType;
     useEffect(() => {
-        
         const fetchCouresData = async () =>{
             await axios.get(ALL_COURSES_URL)
             .then(
@@ -70,9 +69,8 @@ export default function Dashboard (){
         } else {
             fetchStudentEnrolledCourses();
         }
-        console.log("student enrolled courses",studentEnrolledCourses)
 
-    },[runEffect, auth.user]);
+    },[runEffect]);
 
     const handleAddModalSave = () => {
         var data = JSON.stringify({
@@ -103,6 +101,7 @@ export default function Dashboard (){
                 setStartDate('');
                 setEnrollLimit('');
                 setShowAddModal(false);
+                setRunEffect(!runEffect);
             }
             else{
                 setAddCoursesError(true)
@@ -111,12 +110,10 @@ export default function Dashboard (){
           .catch(function (error) {
             console.log(error);
         });
-        // Run the courses API to update changes
-        setRunEffect(!runEffect);
+
     }
 
     const handleCourseEnroll = (courseId, userId) => {
-        console.log("Course id: ",courseId);
 
         var data = JSON.stringify({
             "enrollment": {
@@ -198,7 +195,7 @@ export default function Dashboard (){
                             <div className="max-w-sm rounded overflow-hidden shadow-lg items-stretch h-full">
                                 <img className="w-full" src="/static/images/card-top.jpeg" alt="Sunset in the mountains" />
                                 <div className="px-6 py-4">
-                                    <div className="font-bold text-xl mb-2"><Link to = "/course_module" state={{ course: course }}>{course.name}</Link></div>
+                                    <div className="font-bold text-xl mb-2"><Link to = "/course_module" state={{ course: course}}>{course.name}</Link></div>
                                 </div>
                             </div>
                         </div>

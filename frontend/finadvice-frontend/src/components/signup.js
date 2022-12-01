@@ -33,7 +33,6 @@ export default function SignUp () {
         setDob(e.target.value)
     };
     const handleRoleChange = e => {
-        console.log(e.target.value);
         setRole(e.target.value)
     };
     const handleNumberChange = e => {
@@ -64,10 +63,7 @@ export default function SignUp () {
           axios(config)
           .then(function (response) {
             const res = response.data;
-            console.log(res);
-            console.log(res.hasOwnProperty("user"));
             if (res.hasOwnProperty("user")) {
-                console.log("here");
                 setSuccessMsg(true);
                 setCredentialError(false);
                 setFullName('');
