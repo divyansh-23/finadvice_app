@@ -5,4 +5,5 @@ class User < ApplicationRecord
   validates_uniqueness_of :email
 
   has_many :courses
+  has_many :enrollments
 end

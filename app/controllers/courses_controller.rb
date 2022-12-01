@@ -2,7 +2,7 @@ class CoursesController < ApplicationController
   include CurrentUserConcern
 
   def create
-      course = Course.create!(
+    course = Course.create!(
       name: params['course']['name'],
       subject: params['course']['subject'],
       category: params['course']['category'],
@@ -25,7 +25,6 @@ class CoursesController < ApplicationController
 
   #to be done
   def update
-
 # user = User
 #              .find_by(email: params["user"]["email"])
 #              .try(:authenticate, params["user"]["password"])
@@ -60,7 +59,6 @@ class CoursesController < ApplicationController
 #     else
 #       render json: { status: course_not_created }
 #     end
-
   end
 
   def index
