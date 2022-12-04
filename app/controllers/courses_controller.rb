@@ -24,7 +24,7 @@ class CoursesController < ApplicationController
 
 
   #to be done
-  def update
+  # def update
 # user = User
 #              .find_by(email: params["user"]["email"])
 #              .try(:authenticate, params["user"]["password"])
@@ -59,7 +59,7 @@ class CoursesController < ApplicationController
 #     else
 #       render json: { status: course_not_created }
 #     end
-  end
+  # end
 
   def index
     courses = Course.all
