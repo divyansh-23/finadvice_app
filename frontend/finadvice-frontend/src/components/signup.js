@@ -1,6 +1,7 @@
 import React from "react";
 import {useState} from "react";
 import { Link } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import { SIGN_UP_URL } from "../api_config";
 import axios from "axios";
 
@@ -15,8 +16,10 @@ export default function SignUp () {
     const [number, setNumber] = useState('');
     const [credentialError, setCredentialError] = useState(false);
     const [successMsg, setSuccessMsg] = useState(false);
+    const navigate = useNavigate();
 
     const current = new Date().toISOString().split("T")[0]
+    const redirectPath = '/login'
     const handleNameChange = e => {
         setFullName(e.target.value)
      };
@@ -72,6 +75,7 @@ export default function SignUp () {
                 setDob('');
                 setRole('');
                 setNumber('');
+                navigate(redirectPath,{replace: true})
             } else {
                 setCredentialError(true)
             }
