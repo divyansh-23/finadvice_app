@@ -1,8 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "./auth";
-import { Link, useLocation } from 'react-router-dom';
-import { ADD_MODULE_URL, MODULE_LIST_URL } from "../api_config";
+import { useLocation } from 'react-router-dom';
+import { ADD_MODULE_URL, MODULE_LIST_URL, STUDENT_COURSES } from "../api_config";
+import ModuleTable from "./modules_table";
 
 export default function CourseModule(){
     const auth = useAuth();
@@ -25,13 +26,25 @@ export default function CourseModule(){
     const [addCoursesError, setAddCoursesError] = useState(false);
     const [effect, setEffect] = useState(false);
 
+    const [enrolledCourses, setStudentEnrolledCourses] = useState([]);
+    const userId = auth.user['user']['id'];
+
     useEffect (() => {
         axios.get(MODULE_LIST_URL+`?course_id=`+course['id'])
         .then(res => {
-            console.log(res.data)
             setModules(res.data);
         })
         .catch(err => console.log(err))
+
+        //Enrolled courses
+        const fetchStudentEnrolledCourses = async () => {
+            axios.get(STUDENT_COURSES+`?user_id=`+userId)
+            .then(
+                res => setStudentEnrolledCourses(res.data['courses'])
+            )
+            .catch(err => console.log(err)); 
+        }
+        fetchStudentEnrolledCourses();
     },[effect]);
 
     const handleAddModuleSave = () => {
@@ -63,6 +76,7 @@ export default function CourseModule(){
             setAddCoursesError(true)
           });
     }
+    
     return(
         <div className="container mx-auto mt-8">
             {userType === 'instructor' && 
@@ -80,53 +94,19 @@ export default function CourseModule(){
                 <h1 className="text-2xl text-blue-600">Description: {course.description}</h1>
                 <h1 className="text-2xl text-blue-600">Start Date: {course.start_date}</h1>
             </div>
+            {userType === 'student' && enrolledCourses.map(course => course['id']).indexOf(course.id) === -1 &&
 
-            <div className="overflow-x-auto relative">
-                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead className="text-xs text-gray-700 uppercase bg-green-200 dark:bg-teal-500 dark:text-neutral-100">
-                        <tr>
-                            <th scope="col" className="py-3 px-6">
-                                Module ID
-                            </th>
-                            <th scope="col" className="py-3 px-6">
-                                Module Name
-                            </th>
-                            <th scope="col" className="py-3 px-6">
-                                Description
-                            </th>
-                            <th scope="col" className="py-3 px-6">
-                                Created At
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            modules && modules['course_modules'].map(module => {
-                                return(
-                                    <tr className="bg-white  dark:bg-neutral-50 dark:border-gray-700">
-                                    <th scope="row" className="py-4 px-6 font-medium text-neutral-900 whitespace-nowrap dark:text-neutral-900">
-                                        {module.id}
-                                    </th>
-                                    <td className="py-4 px-6 text-neutral-900">
-                                        <Link to="/video_module" state={{ module: module }}>
-                                            {module.name}
-                                        </Link>
-                                    </td>
-                                    <td className="py-4 px-6 text-neutral-900">
-                                        {module.description}
-                                    </td>
-                                    <td className="py-4 px-6 text-neutral-900">
-                                        {module.created_at}
-                                    </td>
-                            </tr>
-                                );
-                            })
-                        }
-                            
-                        
-                    </tbody>
-                </table>
-            </div>
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                    <strong className="font-bold">Pleases enroll in the course to view its contents!</strong>
+                    <span className="absolute top-0 bottom-0 right-0 px-4 py-3">
+                    <svg className="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
+                    </span>
+                </div>
+            }
+
+            {  (userType === 'student' && enrolledCourses.map(course => course['id']).indexOf(course.id) !== -1) ? <ModuleTable modules={modules} />: null }
+            { userType === 'instructor' ? <ModuleTable modules={modules} />: null}
+
 
             {showAddModal ? (
             <div>

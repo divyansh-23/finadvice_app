@@ -1,4 +1,4 @@
-export const BASE_URL = "http://localhost:3000/"
+export const BASE_URL = "https://radiant-stream-07739.herokuapp.com/"
 export const LOGIN_API_URL = BASE_URL + "sessions"
 export const ALL_COURSES_URL = BASE_URL + "courses"
 export const SIGN_UP_URL = BASE_URL + "registrations"
