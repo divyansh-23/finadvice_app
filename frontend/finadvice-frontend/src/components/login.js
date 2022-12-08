@@ -56,7 +56,6 @@ export default function Login () {
         .then(
             res => {
                 const data = res.data;
-                console.log("status code",res.status);
                 if (data["logged_in"] !== undefined && data["logged_in"] === true) {
                     auth.login(data);
                     navigate(redirectPath,{replace: true})
@@ -64,7 +63,6 @@ export default function Login () {
                 else {
                     setCredentialError(true)
                 }
-                console.log(typeof(data));
                 
             }
         )

@@ -165,7 +165,7 @@ export default function Dashboard (){
                     return(
                         <div key={course.id} className="container mx-auto mt-8">
                             <div className="max-w-sm rounded overflow-hidden shadow-lg items-stretch h-full">
-                                <img className="w-full" src="/static/images/card-top.jpeg" alt="Sunset in the mountains" />
+                                <img className="w-full" src="/static/images/finance.png" alt="Sunset in the mountains" />
                                 <div className="px-6 py-4">
                                     <div className="font-bold text-xl mb-2"><Link to = "/course_module" state={{ course: course }}>{course.name}</Link></div>
                                 </div>
@@ -193,7 +193,7 @@ export default function Dashboard (){
                     return(
                         <div key={course.id} className="container mx-auto mt-8">
                             <div className="max-w-sm rounded overflow-hidden shadow-lg items-stretch h-full">
-                                <img className="w-full" src="/static/images/card-top.jpeg" alt="Sunset in the mountains" />
+                                <img className="w-full" src="/static/images/finance.png" alt="Sunset in the mountains" />
                                 <div className="px-6 py-4">
                                     <div className="font-bold text-xl mb-2"><Link to = "/course_module" state={{ course: course}}>{course.name}</Link></div>
                                 </div>
@@ -220,7 +220,7 @@ export default function Dashboard (){
                     return(
                         <div key={course.id} className="container mx-auto mt-8">
                             <div className="max-w-sm rounded overflow-hidden shadow-lg items-stretch h-full">
-                                <img className="w-full" src="/static/images/card-top.jpeg" alt="Sunset in the mountains" />
+                                <img className="w-full" src="/static/images/finance.png" alt="Sunset in the mountains" />
                                 <div className="px-6 py-4">
                                     <div className="font-bold text-xl mb-2"><Link to = "/course_module" state={{ course: course }}>{course.name}</Link></div>
                                 </div>
