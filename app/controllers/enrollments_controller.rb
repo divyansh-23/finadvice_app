@@ -19,22 +19,6 @@ class EnrollmentsController < ApplicationController
     end
   end
 
-  #to complete later
-  def update
-    # # binding.pry
-    # enrollment = Enrollment.find_by(id: params['id'])
-    # enrollment.update!(student_progress_module_id: params['enrollment']['module_id'])
-
-    # render json: {
-    #   status: :enrollment_updated,
-    #   enrollment: enrollment 
-    # }
-  end
-
-  def delete
-    
-  end
-
   def student_courses
     course_ids = Enrollment.where(user_id: params["user_id"]).pluck(:course_id).uniq
     courses = Course.where(id: course_ids)
